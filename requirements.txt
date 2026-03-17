@@ -1,0 +1,11 @@
+streamlit>=1.35.0
+pandas>=2.0.0
+numpy>=1.26.0
+yfinance>=0.2.40
+backtrader>=1.9.78
+pandas-ta>=0.3.14b
+rich>=13.0.0
+loguru>=0.7.0
+requests>=2.31.0
+lxml>=4.9.0
+pyarrow>=14.0.0
