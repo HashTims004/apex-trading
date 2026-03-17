@@ -1,9 +1,9 @@
 streamlit>=1.35.0
-pandas>=2.0.0
-numpy>=1.26.0
+pandas>=2.0.0,<3.0.0
+numpy>=1.26.0,<2.0.0
 yfinance>=0.2.40
-backtrader>=1.9.78
-pandas-ta>=0.3.14b
+backtrader==1.9.78.123
+pandas-ta==0.3.14b0
 rich>=13.0.0
 loguru>=0.7.0
 requests>=2.31.0
