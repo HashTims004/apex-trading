@@ -90,7 +90,7 @@ with st.sidebar:
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 @st.cache_data(ttl=3600, show_spinner=False)
-def fetch_and_backtest(symbols, capital, years, exchange):
+def fetch_and_backtest(symbols: tuple, capital: float, years: int, exchange: str):
     from data.data_engine import DataEngine, normalise_ticker
     from backtesting.evaluator import BacktestEvaluator
 
@@ -117,7 +117,7 @@ def fetch_and_backtest(symbols, capital, years, exchange):
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
-def fetch_liquidity(symbols, exchange):
+def fetch_liquidity(symbols: tuple, exchange: str):
     from data.data_engine import DataEngine, normalise_ticker
     from utils.constants import CRORE
 
@@ -250,7 +250,7 @@ else:
     if mode == "Liquidity Scan":
         st.subheader(f"🔍 Liquidity Scan — {exchange}")
         with st.spinner(f"Scanning {len(raw_tickers)} tickers..."):
-            df_liq = fetch_liquidity(raw_tickers, exchange)
+            df_liq = fetch_liquidity(tuple(raw_tickers), exchange)
 
         liquid   = df_liq[df_liq["Status"].str.startswith("LIQUID")]
         illiquid = df_liq[~df_liq["Status"].str.startswith("LIQUID")]
@@ -260,7 +260,7 @@ else:
         c2.metric("Liquid",   len(liquid),   delta=f"{len(liquid)/len(df_liq)*100:.0f}%")
         c3.metric("Illiquid", len(illiquid), delta=f"-{len(illiquid)}", delta_color="inverse")
 
-        st.dataframe(df_liq.style.applymap(
+        st.dataframe(df_liq.style.map(
             lambda v: "color: green" if "LIQUID ✓" in str(v) else ("color: red" if "✗" in str(v) else ""),
         ), use_container_width=True, hide_index=True)
 
@@ -269,7 +269,7 @@ else:
 
         with st.spinner(f"Fetching data and backtesting {len(raw_tickers)} ticker(s)... This may take a minute."):
             try:
-                results, skipped = fetch_and_backtest(raw_tickers, capital, years, exchange)
+                results, skipped = fetch_and_backtest(tuple(raw_tickers), capital, years, exchange)
             except Exception as e:
                 st.error(f"Error: {e}")
                 st.stop()
@@ -312,8 +312,8 @@ else:
 
         st.dataframe(
             df_results.style
-                .applymap(colour_valid, subset=["Valid"])
-                .applymap(colour_num,   subset=["Return (%)","CAGR (%)","Alpha (%)"])
+                .map(colour_valid, subset=["Valid"])
+                .map(colour_num,   subset=["Return (%)","CAGR (%)","Alpha (%)"])
                 .bar(subset=["Score /100"], color="#e67e22", vmin=0, vmax=100),
             use_container_width=True, hide_index=True,
         )
